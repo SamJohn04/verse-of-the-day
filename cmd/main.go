@@ -50,8 +50,12 @@ func main() {
 
 	fmt.Printf(
 		"%v, %v\n\n%v\n",
-		result.Verse.Details.Reference,
+		bold(result.Verse.Details.Reference),
 		result.Verse.Details.Version,
 		result.Verse.Details.Text,
 	)
+}
+
+func bold(s string) string {
+	return fmt.Sprintf("\033[1m%v\033[0m", s)
 }
