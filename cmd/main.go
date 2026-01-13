@@ -5,23 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/SamJohn04/verse-of-the-day/internal"
 )
-
-type Details struct {
-	Text      string `json:"text"`
-	Reference string `json:"reference"`
-	Version   string `json:"version"`
-	VerseUrl  string `json:"verseurl"`
-}
-
-type Verse struct {
-	Details Details `json:"details"`
-	Notice  string  `json:"notice"`
-}
-
-type Result struct {
-	Verse Verse `json:"verse"`
-}
 
 func main() {
 	onlineVerseSource := "https://beta.ourmanna.com/api/v1/get?format=json&order=daily"
@@ -41,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	result := Result{}
+	result := internal.Result{}
 	err = json.NewDecoder(response.Body).Decode(&result)
 	if err != nil {
 		fmt.Printf("error while decoding the result: %v", err)
@@ -49,13 +35,9 @@ func main() {
 	}
 
 	fmt.Printf(
-		"%v, %v\n\n%v\n",
-		bold(result.Verse.Details.Reference),
-		result.Verse.Details.Version,
+		"%v\n%v\n\n%v\n",
+		internal.Bold(result.Verse.Details.Reference),
+		internal.CommonBibleVersionNames(result.Verse.Details.Version),
 		result.Verse.Details.Text,
 	)
-}
-
-func bold(s string) string {
-	return fmt.Sprintf("\033[1m%v\033[0m", s)
 }
